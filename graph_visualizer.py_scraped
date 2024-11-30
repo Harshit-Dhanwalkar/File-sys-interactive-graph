@@ -1,0 +1,42 @@
+import json
+import os
+
+from pyvis.network import Network
+
+
+def visualize_graph(graph_data):
+    net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white")
+    for node in graph_data["nodes"]:
+        net.add_node(
+            node["id"],
+            label=node["label"],
+            group=node["group"],
+            title=f"Tags: {', '.join(node['tags'])}",
+        )
+
+    for edge in graph_data["edges"]:
+        # Ensure full paths are used for comparison
+        if os.path.exists(edge["from"]) and os.path.exists(edge["to"]):
+            net.add_edge(edge["from"], edge["to"], title=edge["relation"])
+        else:
+            print(
+                f"Warning: Skipping edge with non-existent nodes {edge['from']} or {edge['to']}"
+            )
+
+    if len(net.nodes) == 0 or len(net.edges) == 0:
+        print("Error: No nodes or edges were added to the network.")
+        return
+
+    net.show("file_graph.html")
+    print("Graph visualization generated: file_graph.html")
+
+
+if __name__ == "__main__":
+    file_path = input("Enter the path to the graph data JSON file: ")
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            graph_data = json.load(f)
+            print("Graph data loaded successfully!")
+            visualize_graph(graph_data)
+    except Exception as e:
+        print(f"Error loading graph data: {e}")

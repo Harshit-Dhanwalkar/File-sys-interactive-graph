@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Graph</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@9/dist/vis-network.min.js"></script>
+</head>
+<body>
+    <div id="network"></div>
+    <script type="text/javascript">
+        var nodes = new vis.DataSet([
+            // Data populated from Python
+        ]);
+        var edges = new vis.DataSet([
+            // Data populated from Python
+        ]);
+        var container = document.getElementById('network');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var options = {
+            nodes: {
+                color: {
+                    border: '#222222',
+                    background: '#007bff'
+                },
+                font: {
+                    color: '#ffffff'
+                }
+            },
+            edges: {
+                color: '#007bff'
+            },
+            interaction: {
+                hover: true
+            }
+        };
+        var network = new vis.Network(container, data, options);
+        network.on("click", function(params) {
+            if (params.nodes.length > 0) {
+                var filePath = params.nodes[0];
+                fetch(`/open_file?path=${encodeURIComponent(filePath)}`);
+            }
+        });
+    </script>
+</body>
+</html>

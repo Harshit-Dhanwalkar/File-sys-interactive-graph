@@ -1,0 +1,28 @@
+import json
+import os
+import subprocess
+
+from flask import Flask, jsonify, render_template, request
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def index():
+    return render_template("file_graph.html")
+
+
+@app.route("/open_file")
+def open_file():
+    file_path = request.args.get("path")
+    if file_path and os.path.exists(file_path):
+        subprocess.run(["xdg-open", file_path], check=True)
+        return jsonify({"status": "success", "message": f"File {file_path} opened!"})
+    else:
+        return jsonify(
+            {"status": "error", "message": "File not found or invalid path!"}
+        )
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
