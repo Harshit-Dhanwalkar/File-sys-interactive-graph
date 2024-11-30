@@ -1,4 +1,3 @@
-```markdown
 # Interactive File Graph Visualization
 
 This project scans a directory and generates a visual representation of its file structure as a graph. It provides two components:
